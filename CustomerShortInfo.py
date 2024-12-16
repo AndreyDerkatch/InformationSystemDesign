@@ -1,10 +1,10 @@
 import re
-from datetime import datetime
 
 
 class CustomerShortInfo:
-    def __init__(self, customer_id, first_name, last_name, email):
-        self.__customer_id = self.__validate_id(customer_id)
+    def __init__(self, first_name, last_name, email, customer_id=None):
+        if customer_id:
+            self._set_id(customer_id)
         self.set_first_name(first_name)
         self.set_last_name(last_name)
         self.set_email(email)
@@ -22,7 +22,7 @@ class CustomerShortInfo:
             last_name = data[2].strip()
             email = data[3].strip()
 
-            return CustomerShortInfo(customer_id, first_name, last_name, email)
+            return CustomerShortInfo(customer_id=customer_id, first_name=first_name, last_name=last_name, email=email)
         except Exception as e:
             raise ValueError(f"Error parsing CustomerShortInfo data: {e}")
 
@@ -46,16 +46,27 @@ class CustomerShortInfo:
         raise ValueError("Invalid email format.")
 
     def get_customer_id(self):
-        return self.__customer_id
+        if hasattr(self, '_CustomerShortInfo__customer_id'):
+            return self.__customer_id
+        return None
 
     def get_first_name(self):
-        return self.__first_name
+        if hasattr(self, '_CustomerShortInfo__first_name'):
+            return self.__first_name
+        return None
 
     def get_last_name(self):
-        return self.__last_name
+        if hasattr(self, '_CustomerShortInfo__last_name'):
+            return self.__last_name
+        return None
 
     def get_email(self):
-        return self.__email
+        if hasattr(self, '_CustomerShortInfo__email'):
+            return self.__email
+        return None
+
+    def _set_id(self, customer_id):
+        self.__customer_id = self.__validate_id(customer_id)
 
     def set_first_name(self, first_name):
         self.__first_name = self.__validate_name(first_name)
@@ -68,15 +79,15 @@ class CustomerShortInfo:
 
     def __eq__(self, other):
         if isinstance(other, CustomerShortInfo):
-            return (self.__customer_id == other.__customer_id and
-                    self.__first_name == other.__first_name and
-                    self.__last_name == other.__last_name and
-                    self.__email == other.__email)
+            return (self.get_customer_id() == other.get_customer_id() and
+                    self.get_first_name() == other.get_first_name() and
+                    self.get_last_name() == other.get_last_name() and
+                    self.get_email() == other.get_email())
         return False
 
     def __str__(self):
-        return f"Customer short info [ID: {self.__customer_id}, Name: {self.__first_name} {self.__last_name}, Email: {self.__email}]"
+        return f"Customer short info [ID: {self.get_customer_id()}, Name: {self.get_first_name()} {self.get_last_name()}, Email: {self.get_email()}]"
 
     def __hash__(self):
-        return hash(self.get_first_name()) + hash(self.get_last_name()) + hash(self.get_customer_id()) + hash(self.get_email())
-
+        return hash(self.get_first_name()) + hash(self.get_last_name()) + hash(self.get_customer_id()) + hash(
+            self.get_email())
