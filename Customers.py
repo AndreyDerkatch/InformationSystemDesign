@@ -46,36 +46,6 @@ class Customer(CustomerShortInfo):
         except Exception as e:
             raise ValueError(f"Error parsing customer data: {e}")
 
-    @staticmethod
-    def from_dict(data: dict):
-        date_time = datetime.strptime(data['date_joined'], '%Y-%m-%d %H:%M:%S') if data.get('date_joined') else None
-        return Customer(
-            customer_id=data['customer_id'],
-            first_name=data['first_name'],
-            last_name=data['last_name'],
-            email=data['email'],
-            phone_number=data.get('phone_number'),
-            address=data.get('address'),
-            city=data.get('city'),
-            postal_code=data.get('postal_code'),
-            country=data.get('country'),
-            date_joined=date_time
-        )
-
-    def to_dict(self):
-        return {
-            'customer_id': self.get_customer_id(),
-            'first_name': self.get_first_name(),
-            'last_name': self.get_last_name(),
-            'email': self.get_email(),
-            'phone_number': self.get_phone_number(),
-            'address': self.get_address(),
-            'city': self.get_city(),
-            'postal_code': self.get_postal_code(),
-            'country': self.get_country(),
-            'date_joined': self.get_date_joined().strftime('%Y-%m-%d %H:%M:%S') if self.get_date_joined() else None
-        }
-
     def get_phone_number(self):
         if hasattr(self, '_Customer__phone_number'):
             return self.__phone_number
