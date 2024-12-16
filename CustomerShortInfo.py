@@ -88,6 +88,3 @@ class CustomerShortInfo:
     def __str__(self):
         return f"Customer short info [ID: {self.get_customer_id()}, Name: {self.get_first_name()} {self.get_last_name()}, Email: {self.get_email()}]"
 
-    def __hash__(self):
-        return hash(self.get_first_name()) + hash(self.get_last_name()) + hash(self.get_customer_id()) + hash(
-            self.get_email())
