@@ -4,11 +4,11 @@ from datetime import datetime
 from CustomerShortInfo import CustomerShortInfo
 
 class Customer(CustomerShortInfo):
-    def __init__(self, first_name, last_name, email, customer_id=None, phone_number=None,
+    def __init__(self, first_name, last_name, phone_number, customer_id=None, email=None,
                  address=None, city=None, postal_code=None, country=None, date_joined=None):
-        super().__init__(customer_id=customer_id, first_name=first_name, last_name=last_name, email=email)
-        if phone_number:
-            self.set_phone_number(phone_number)
+        super().__init__(customer_id=customer_id, first_name=first_name, last_name=last_name, phone_number=phone_number)
+        if email:
+            self.set_email(email)
         if address:
             self.set_address(address)
         if city:
@@ -21,9 +21,9 @@ class Customer(CustomerShortInfo):
             self.set_date_joined(date_joined)
 
     @staticmethod
-    def __validate_phone_number(phone_number):
-        phone_regex = r"^\+?[0-9]{10,15}$"
-        return isinstance(phone_number, str) and re.match(phone_regex, phone_number)
+    def __validate_email(email):
+        email_regex = r"[a-zA-Z0-9._-]+@[a-zA-Z0-9._-]+\.[a-zA-Z0-9_-]+"
+        return isinstance(email, str) and re.match(email_regex, email)
 
     @staticmethod
     def __validate_non_empty_string(value):
@@ -68,9 +68,9 @@ class Customer(CustomerShortInfo):
         except Exception as e:
             raise ValueError(f"Error parsing customer data: {e}")
 
-    def get_phone_number(self):
-        if hasattr(self, '_Customer__phone_number'):
-            return self.__phone_number
+    def get_email(self):
+        if hasattr(self, '_Customer__email'):
+            return self.__email
         return None
 
     def get_address(self):
@@ -98,11 +98,11 @@ class Customer(CustomerShortInfo):
             return self.__date_joined
         return None
 
-    def set_phone_number(self, phone_number):
-        if self.__validate_phone_number(phone_number):
-            self.__phone_number = phone_number
+    def set_email(self, email):
+        if self.__validate_email(email):
+            self.__email = email
         else:
-            raise ValueError("Phone number must be a valid string with 10 to 15 digits, optionally starting with +.")
+            raise ValueError("Invalid email format.")
 
     def set_address(self, address):        #
         if self.__validate_non_empty_string(address):
