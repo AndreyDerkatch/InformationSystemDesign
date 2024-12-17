@@ -28,7 +28,7 @@ class CustomerShortInfo:
     @staticmethod
     def __validate_id(customer_id):
         return isinstance(customer_id, int) and customer_id > 0
-        
+
 
     @staticmethod
     def __validate_name(name):
