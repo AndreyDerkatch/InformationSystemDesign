@@ -21,6 +21,29 @@ class Customer(CustomerShortInfo):
             self.set_date_joined(date_joined)
 
     @staticmethod
+    def __validate_phone_number(phone_number):
+        phone_regex = r"^\+?[0-9]{10,15}$"
+        return isinstance(phone_number, str) and re.match(phone_regex, phone_number)
+
+    @staticmethod
+    def __validate_non_empty_string(value):
+        return isinstance(value, str) and value.strip()
+
+    @staticmethod
+    def __validate_postal_code(postal_code):
+        return isinstance(postal_code, str) and len(postal_code) == 6
+
+    @staticmethod
+    def __validate_date_joined(date_joined):
+        try:
+            if isinstance(date_joined, str):
+                return datetime.strptime(date_joined, '%Y-%m-%d %H:%M:%S')
+            elif isinstance(date_joined, datetime):
+                return date_joined
+        except ValueError:
+            raise ValueError("Date Joined must be a valid datetime in the format YYYY-MM-DD HH:MM:SS.")
+
+    @staticmethod
     def from_string(data_str):
         try:
             # Предполагаем, что строка имеет формат: "id,first_name,last_name,email,phone_number,address,city,postal_code,country,date_joined"
@@ -35,7 +58,7 @@ class Customer(CustomerShortInfo):
             phone_number = data[4].strip()
             address = data[5].strip()
             city = data[6].strip()
-            postal_code = int(data[7].strip())
+            postal_code = data[7].strip()
             country = data[8].strip()
             date_joined = data[9].strip()
 
@@ -97,7 +120,7 @@ class Customer(CustomerShortInfo):
         if self.__validate_postal_code(postal_code):
             self.__postal_code = postal_code
         else:
-            raise ValueError("Postal Code must be an integer with up to 10 digits.")
+            raise ValueError("Postal Code must be an string with up to 6 digits.")
 
     def set_country(self, country):
         if self.__validate_non_empty_string(country):
@@ -114,28 +137,6 @@ class Customer(CustomerShortInfo):
         except ValueError:
             raise ValueError("Date Joined must be a valid datetime in the format YYYY-MM-DD HH:MM:SS.")
 
-    @staticmethod
-    def __validate_phone_number(phone_number):
-        phone_regex = r"^\+?[0-9]{10,15}$"
-        return isinstance(phone_number, str) and re.match(phone_regex, phone_number)
-
-    @staticmethod
-    def __validate_non_empty_string(value):
-        return isinstance(value, str) and value.strip()
-
-    @staticmethod
-    def __validate_postal_code(postal_code):
-        return isinstance(postal_code, int) and len(str(postal_code)) <= 10
-
-    @staticmethod
-    def __validate_date_joined(date_joined):
-        try:
-            if isinstance(date_joined, str):
-                return datetime.strptime(date_joined, '%Y-%m-%d %H:%M:%S')
-            elif isinstance(date_joined, datetime):
-                return date_joined
-        except ValueError:
-            raise ValueError("Date Joined must be a valid datetime in the format YYYY-MM-DD HH:MM:SS.")
 
     def __str__(self):
         return (f"Customer [ID: {self.get_customer_id()}, "
