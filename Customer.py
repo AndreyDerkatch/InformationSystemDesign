@@ -99,31 +99,31 @@ class Customer(CustomerShortInfo):
         return None
 
     def set_email(self, email):
-        if self.__validate_email(email):
+        if self.validate_email(email):
             self.__email = email
         else:
             raise ValueError("Invalid email format.")
 
     def set_address(self, address):        #
-        if self.__validate_non_empty_string(address):
+        if self.validate_non_empty_string(address):
             self.__address= address
         else:
             raise ValueError("Address must be a non-empty string.")
 
     def set_city(self, city):
-        if self.__validate_non_empty_string(city):
+        if self.validate_non_empty_string(city):
             self.__city = city
         else:
             raise ValueError("City must be a non-empty string.")
 
     def set_postal_code(self, postal_code):
-        if self.__validate_postal_code(postal_code):
+        if self.validate_postal_code(postal_code):
             self.__postal_code = postal_code
         else:
             raise ValueError("Postal Code must be an string with up to 6 digits.")
 
     def set_country(self, country):
-        if self.__validate_non_empty_string(country):
+        if self.validate_non_empty_string(country):
             self.__country = country
         else:
             raise ValueError("Country must be a non-empty string.")
