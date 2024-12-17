@@ -3,7 +3,6 @@ from datetime import datetime
 
 from CustomerShortInfo import CustomerShortInfo
 
-
 class Customer(CustomerShortInfo):
     def __init__(self, first_name, last_name, email, customer_id=None, phone_number=None,
                  address=None, city=None, postal_code=None, country=None, date_joined=None):
@@ -77,41 +76,56 @@ class Customer(CustomerShortInfo):
         return None
 
     def set_phone_number(self, phone_number):
-        self.__phone_number = self.__validate_phone_number(phone_number)
+        if self.__validate_phone_number(phone_number):
+            self.__phone_number = phone_number
+        else:
+            raise ValueError("Phone number must be a valid string with 10 to 15 digits, optionally starting with +.")
 
-    def set_address(self, address):
-        self.__address = self.__validate_non_empty_string(address, "Address")
+    def set_address(self, address):        #
+        if self.__validate_non_empty_string(address):
+            self.__address= address
+        else:
+            raise ValueError("Address must be a non-empty string.")
 
     def set_city(self, city):
-        self.__city = self.__validate_non_empty_string(city, "City")
+        if self.__validate_non_empty_string(city):
+            self.__city = city
+        else:
+            raise ValueError("City must be a non-empty string.")
 
     def set_postal_code(self, postal_code):
-        self.__postal_code = self.__validate_postal_code(postal_code)
+        if self.__validate_postal_code(postal_code):
+            self.__postal_code = postal_code
+        else:
+            raise ValueError("Postal Code must be an integer with up to 10 digits.")
 
     def set_country(self, country):
-        self.__country = self.__validate_non_empty_string(country, "Country")
+        if self.__validate_non_empty_string(country):
+            self.__country = country
+        else:
+            raise ValueError("Country must be a non-empty string.")
 
     def set_date_joined(self, date_joined):
-        self.__date_joined = self.__validate_date_joined(date_joined)
+        try:
+            if isinstance(date_joined, str):
+                self.__date_joined = datetime.strptime(date_joined, '%Y-%m-%d %H:%M:%S')
+            elif isinstance(date_joined, datetime):
+                self.__date_joined = date_joined
+        except ValueError:
+            raise ValueError("Date Joined must be a valid datetime in the format YYYY-MM-DD HH:MM:SS.")
 
     @staticmethod
     def __validate_phone_number(phone_number):
         phone_regex = r"^\+?[0-9]{10,15}$"
-        if isinstance(phone_number, str) and re.match(phone_regex, phone_number):
-            return phone_number
-        raise ValueError("Phone number must be a valid string with 10 to 15 digits, optionally starting with +.")
+        return isinstance(phone_number, str) and re.match(phone_regex, phone_number)
 
     @staticmethod
-    def __validate_non_empty_string(value, field_name):
-        if isinstance(value, str) and value.strip():
-            return value
-        raise ValueError(f"{field_name} must be a non-empty string.")
+    def __validate_non_empty_string(value):
+        return isinstance(value, str) and value.strip()
 
     @staticmethod
     def __validate_postal_code(postal_code):
-        if isinstance(postal_code, int) and len(str(postal_code)) <= 10:
-            return postal_code
-        raise ValueError("Postal Code must be an integer with up to 10 digits.")
+        return isinstance(postal_code, int) and len(str(postal_code)) <= 10
 
     @staticmethod
     def __validate_date_joined(date_joined):
