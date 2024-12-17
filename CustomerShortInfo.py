@@ -27,16 +27,16 @@ class CustomerShortInfo:
             raise ValueError(f"Error parsing CustomerShortInfo data: {e}")
 
     @staticmethod
-    def __validate_id(customer_id):
+    def validate_id(customer_id):
         return isinstance(customer_id, int) and customer_id > 0
 
 
     @staticmethod
-    def __validate_name(name):
+    def validate_name(name):
         return isinstance(name, str) and name
 
     @staticmethod
-    def __validate_phone_number(phone_number):
+    def validate_phone_number(phone_number):
         phone_regex = r"^\+?[0-9]{10,15}$"
         return isinstance(phone_number, str) and re.match(phone_regex, phone_number)
 
@@ -86,9 +86,7 @@ class CustomerShortInfo:
 
     def __eq__(self, other):
         if isinstance(other, CustomerShortInfo):
-            return (self.get_first_name() == other.get_first_name() and
-                    self.get_last_name() == other.get_last_name() and
-                    self.get_phone_number() == other.get_phone_number())
+            return (self.get_phone_number() == other.get_phone_number())
         return False
 
     def __str__(self):
