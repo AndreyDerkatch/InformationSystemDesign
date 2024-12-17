@@ -1,12 +1,12 @@
 import re
 
 class CustomerShortInfo:
-    def __init__(self, first_name, last_name, email, customer_id=None):
+    def __init__(self, first_name, last_name, phone_number, customer_id=None):
         if customer_id:
             self._set_id(customer_id)
         self.set_first_name(first_name)
         self.set_last_name(last_name)
-        self.set_email(email)
+        self.set_phone_number(phone_number)
 
     @staticmethod
     def from_string(data_str):
@@ -19,9 +19,10 @@ class CustomerShortInfo:
             customer_id = int(data[0].strip())
             first_name = data[1].strip()
             last_name = data[2].strip()
-            email = data[3].strip()
+            phone_number = data[3].strip()
 
-            return CustomerShortInfo(customer_id=customer_id, first_name=first_name, last_name=last_name, email=email)
+            return CustomerShortInfo(customer_id=customer_id, first_name=first_name,
+                                     last_name=last_name, phone_number=phone_number)
         except Exception as e:
             raise ValueError(f"Error parsing CustomerShortInfo data: {e}")
 
@@ -35,9 +36,9 @@ class CustomerShortInfo:
         return isinstance(name, str) and name
 
     @staticmethod
-    def __validate_email(email):
-        email_regex = r"[a-zA-Z0-9._-]+@[a-zA-Z0-9._-]+\.[a-zA-Z0-9_-]+"
-        return isinstance(email, str) and re.match(email_regex, email)
+    def __validate_phone_number(phone_number):
+        phone_regex = r"^\+?[0-9]{10,15}$"
+        return isinstance(phone_number, str) and re.match(phone_regex, phone_number)
 
     def get_customer_id(self):
         if hasattr(self, '_CustomerShortInfo__customer_id'):
@@ -54,9 +55,9 @@ class CustomerShortInfo:
             return self.__last_name
         return None
 
-    def get_email(self):
-        if hasattr(self, '_CustomerShortInfo__email'):
-            return self.__email
+    def get_phone_number(self):
+        if hasattr(self, '_CustomerShortInfo__phone_number'):
+            return self.__phone_number
         return None
 
     def _set_id(self, customer_id):
@@ -77,19 +78,19 @@ class CustomerShortInfo:
         else:
             raise ValueError("Name must be a non-empty string up to 255 characters.")
 
-    def set_email(self, email):
-        if self.__validate_email(email):
-            self.__email = email
+    def set_phone_number(self, phone_number):
+        if self.__validate_phone_number(phone_number):
+            self.__phone_number = phone_number
         else:
-            raise ValueError("Invalid email format.")
+            raise ValueError("Phone number must be a valid string with 10 to 15 digits, optionally starting with +.")
 
     def __eq__(self, other):
         if isinstance(other, CustomerShortInfo):
-            return (self.get_customer_id() == other.get_customer_id() and
-                    self.get_first_name() == other.get_first_name() and
+            return (self.get_first_name() == other.get_first_name() and
                     self.get_last_name() == other.get_last_name() and
-                    self.get_email() == other.get_email())
+                    self.get_phone_number() == other.get_phone_number())
         return False
 
     def __str__(self):
-        return f"Customer short info [ID: {self.get_customer_id()}, Name: {self.get_first_name()} {self.get_last_name()}, Email: {self.get_email()}]"
+        return (f"Customer short info [ID: {self.get_customer_id()}, Name: {self.get_first_name()} {self.get_last_name()}, "
+                f"Phone: {self.get_phone_number()}]")
