@@ -1,6 +1,5 @@
 import re
 
-
 class CustomerShortInfo:
     def __init__(self, first_name, last_name, email, customer_id=None):
         if customer_id:
@@ -28,22 +27,17 @@ class CustomerShortInfo:
 
     @staticmethod
     def __validate_id(customer_id):
-        if isinstance(customer_id, int) and customer_id > 0:
-            return customer_id
-        raise ValueError("CustomerShortInfo ID must be a positive integer.")
+        return isinstance(customer_id, int) and customer_id > 0
+        
 
     @staticmethod
     def __validate_name(name):
-        if isinstance(name, str) and name:
-            return name
-        raise ValueError("Name must be a non-empty string up to 255 characters.")
+        return isinstance(name, str) and name
 
     @staticmethod
     def __validate_email(email):
         email_regex = r"[a-zA-Z0-9._-]+@[a-zA-Z0-9._-]+\.[a-zA-Z0-9_-]+"
-        if isinstance(email, str) and re.match(email_regex, email):
-            return email
-        raise ValueError("Invalid email format.")
+        return isinstance(email, str) and re.match(email_regex, email)
 
     def get_customer_id(self):
         if hasattr(self, '_CustomerShortInfo__customer_id'):
@@ -66,16 +60,28 @@ class CustomerShortInfo:
         return None
 
     def _set_id(self, customer_id):
-        self.__customer_id = self.__validate_id(customer_id)
+        if self.__validate_id(customer_id):
+            self.__customer_id = customer_id
+        else:
+            raise ValueError("CustomerShortInfo ID must be a positive integer.")
 
     def set_first_name(self, first_name):
-        self.__first_name = self.__validate_name(first_name)
+        if self.__validate_name(first_name):
+            self.__first_name = first_name
+        else:
+            raise ValueError("Name must be a non-empty string up to 255 characters.")
 
     def set_last_name(self, last_name):
-        self.__last_name = self.__validate_name(last_name)
+        if self.__validate_name(last_name):
+            self.__last_name = last_name
+        else:
+            raise ValueError("Name must be a non-empty string up to 255 characters.")
 
     def set_email(self, email):
-        self.__email = self.__validate_email(email)
+        if self.__validate_email(email):
+            self.__email = email
+        else:
+            raise ValueError("Invalid email format.")
 
     def __eq__(self, other):
         if isinstance(other, CustomerShortInfo):
@@ -87,4 +93,3 @@ class CustomerShortInfo:
 
     def __str__(self):
         return f"Customer short info [ID: {self.get_customer_id()}, Name: {self.get_first_name()} {self.get_last_name()}, Email: {self.get_email()}]"
-
