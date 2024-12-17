@@ -9,6 +9,6 @@ if __name__ == "__main__":
 
     print(Cust1)
     print(Cust2)
-    print(Cust1.__eq__(Cust2))
+    print(Cust1 == Cust2)
     print(Cust1.short_info())
     print(Cust2.short_info())
