@@ -21,20 +21,20 @@ class Customer(CustomerShortInfo):
             self.set_date_joined(date_joined)
 
     @staticmethod
-    def __validate_email(email):
+    def validate_email(email):
         email_regex = r"[a-zA-Z0-9._-]+@[a-zA-Z0-9._-]+\.[a-zA-Z0-9_-]+"
         return isinstance(email, str) and re.match(email_regex, email)
 
     @staticmethod
-    def __validate_non_empty_string(value):
+    def validate_non_empty_string(value):
         return isinstance(value, str) and value.strip()
 
     @staticmethod
-    def __validate_postal_code(postal_code):
+    def validate_postal_code(postal_code):
         return isinstance(postal_code, str) and len(postal_code) == 6
 
     @staticmethod
-    def __validate_date_joined(date_joined):
+    def validate_date_joined(date_joined):
         try:
             if isinstance(date_joined, str):
                 return datetime.strptime(date_joined, '%Y-%m-%d %H:%M:%S')
