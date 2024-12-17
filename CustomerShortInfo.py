@@ -61,25 +61,25 @@ class CustomerShortInfo:
         return None
 
     def _set_id(self, customer_id):
-        if self.__validate_id(customer_id):
+        if self.validate_id(customer_id):
             self.__customer_id = customer_id
         else:
             raise ValueError("CustomerShortInfo ID must be a positive integer.")
 
     def set_first_name(self, first_name):
-        if self.__validate_name(first_name):
+        if self.validate_name(first_name):
             self.__first_name = first_name
         else:
             raise ValueError("Name must be a non-empty string up to 255 characters.")
 
     def set_last_name(self, last_name):
-        if self.__validate_name(last_name):
+        if self.validate_name(last_name):
             self.__last_name = last_name
         else:
             raise ValueError("Name must be a non-empty string up to 255 characters.")
 
     def set_phone_number(self, phone_number):
-        if self.__validate_phone_number(phone_number):
+        if self.validate_phone_number(phone_number):
             self.__phone_number = phone_number
         else:
             raise ValueError("Phone number must be a valid string with 10 to 15 digits, optionally starting with +.")
