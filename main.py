@@ -1,14 +1,22 @@
 import tkinter as tk
 
-from Customer import Customer
+from CustomerController import CustomerController
+from CustomerRepFileAdapter import CustomerRepFileAdapter
+from CustomerRepPostgres import CustomerRepPostgres
+from CustomerTableView import CustomerTableView
+from JsonFileStrategy import JsonFileStrategy
 
 if __name__ == "__main__":
+    # Инициализация репозитория
+    # repository = CustomerRepPostgres(db_name='postgres', user='postgres', password='postpass')
+    repository = CustomerRepFileAdapter(JsonFileStrategy('customers.json'))
 
-    Cust1 = Customer("Андрей", "Деркач", "89283334455")
-    Cust2 = Customer("Максим", "Баландин", "89283334555")
+    # Инициализация контроллера
+    controller = CustomerController(repository)
 
-    print(Cust1)
-    print(Cust2)
-    print(Cust1 == Cust2)
-    print(Cust1.short_info())
-    print(Cust2.short_info())
+    # Инициализация GUI
+    root = tk.Tk()
+    view = CustomerTableView(root, controller)
+
+    # Запуск GUI
+    root.mainloop()
