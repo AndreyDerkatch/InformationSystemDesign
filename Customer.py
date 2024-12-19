@@ -186,3 +186,7 @@ class Customer(CustomerShortInfo):
         if isinstance(other, Customer):
             return super().__eq__(other)
         return False
+
+    def __hash__(self):
+        return hash(self.get_first_name()) + hash(self.get_last_name()) + hash(self.get_customer_id()) + hash(
+            self.get_phone_number())
