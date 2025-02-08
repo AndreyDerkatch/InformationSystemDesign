@@ -1,0 +1,15 @@
+import yaml
+from typing import List, Optional
+from CustomerRepBase import CustomerRepBase
+
+class CustomerRepYAML(CustomerRepBase):
+    def _load_customers(self) -> List[dict]:
+        try:
+            with open(self.file_path, 'r', encoding='utf-8') as file:
+                return yaml.safe_load(file) or []
+        except FileNotFoundError:
+            return []
+
+    def _save_customers(self):
+        with open(self.file_path, 'w', encoding='utf-8') as file:
+            yaml.dump(self.customers, file, allow_unicode=True, sort_keys=False)
