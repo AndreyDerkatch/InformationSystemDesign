@@ -1,0 +1,44 @@
+class Customer_rep_DB:
+    def __init__(self, db_connection):
+        self.db = db_connection  # Делегируем работу с БД
+
+    def get_by_id(self, customer_id):
+        query = "SELECT * FROM customers WHERE customer_id = %s"
+        result = self.db.execute_query(query, (customer_id,))
+        return result.fetchone()
+
+    def get_k_n_short_list(self, k, n):
+        offset = (n - 1) * k
+        query = "SELECT customer_id, first_name, last_name, phone_number FROM customers LIMIT %s OFFSET %s"
+        result = self.db.execute_query(query, (k, offset))
+        return result.fetchall()
+
+    def add_customer(self, first_name, last_name, phone_number, email=None, address=None, city=None, postal_code=None, country=None):
+        query = """
+        INSERT INTO customers (first_name, last_name, phone_number, email, address, city, postal_code, country)
+        VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
+        RETURNING customer_id
+        """
+        result = self.db.execute_query(query, (first_name, last_name, phone_number, email, address, city, postal_code, country))
+        customer_id = result.fetchone()[0]
+        self.db.commit()
+        return customer_id
+
+    def update_customer(self, customer_id, first_name, last_name, phone_number, email=None, address=None, city=None, postal_code=None, country=None):
+        query = """
+        UPDATE customers
+        SET first_name = %s, last_name = %s, phone_number = %s, email = %s, address = %s, city = %s, postal_code = %s, country = %s
+        WHERE customer_id = %s
+        """
+        self.db.execute_query(query, (first_name, last_name, phone_number, email, address, city, postal_code, country, customer_id))
+        self.db.commit()
+
+    def delete_customer(self, customer_id):
+        query = "DELETE FROM customers WHERE customer_id = %s"
+        self.db.execute_query(query, (customer_id,))
+        self.db.commit()
+
+    def get_count(self):
+        query = "SELECT COUNT(*) FROM customers"
+        result = self.db.execute_query(query)
+        return result.fetchone()[0]
