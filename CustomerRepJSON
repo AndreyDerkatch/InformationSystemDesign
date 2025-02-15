@@ -1,10 +1,8 @@
 import json
-from typing import List, Optional
 from CustomerRepBase import CustomerRepBase
 
-
 class CustomerRepJSON(CustomerRepBase):
-    def _load_customers(self) -> List[dict]:
+    def _load_customers(self):
         try:
             with open(self.file_path, 'r', encoding='utf-8') as file:
                 return json.load(file)
