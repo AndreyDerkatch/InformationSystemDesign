@@ -1,14 +1,14 @@
-import json
+import yaml
 from CustomerRepBase import CustomerRepBase
 
-class CustomerRepJSON(CustomerRepBase):
+class CustomerRepYAML(CustomerRepBase):
     def _load_customers(self):
         try:
             with open(self.file_path, 'r', encoding='utf-8') as file:
-                return json.load(file)
+                return yaml.safe_load(file) or []
         except FileNotFoundError:
             return []
 
     def _save_customers(self):
         with open(self.file_path, 'w', encoding='utf-8') as file:
-            json.dump(self.customers, file, indent=4, ensure_ascii=False)
+            yaml.dump(self.customers, file, allow_unicode=True, sort_keys=False)
