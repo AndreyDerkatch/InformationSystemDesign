@@ -1,0 +1,31 @@
+import psycopg2
+
+class DatabaseConnection:
+    _instance = None  # Хранит единственный экземпляр класса
+
+    def __new__(cls, dbname, user, password, host='localhost', port=5432):
+        if cls._instance is None:
+            cls._instance = super().__new__(cls)
+            cls._instance.conn = psycopg2.connect(
+                dbname=dbname,
+                user=user,
+                password=password,
+                host=host,
+                port=port
+            )
+            cls._instance.cur = cls._instance.conn.cursor()
+        return cls._instance
+
+    def execute_query(self, query, params=None):
+        # Выполняет SQL-запрос
+        self.cur.execute(query, params or ())
+        return self.cur
+
+    def commit(self):
+        # Фиксирует изменения в базе данных
+        self.conn.commit()
+
+    def close(self):
+        # Закрывает соединение с базой данных
+        self.cur.close()
+        self.conn.close()
